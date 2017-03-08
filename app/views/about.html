@@ -1,9 +1,13 @@
 <p>This is the about view.</p>
 
-<a ui-sref="postnr{{data[0].id}}">{{ data[0].title }}</a>
-<h1>
-	{{ data[0].id }}
-</h1>
-<h2>
-	{{ data[0].content }}
-</h2>
+
+<div ng-repeat="post in posts">
+	<a ui-sref="postnr{{ post.id }}">{{ post.title }}</a>
+	<h1>
+		{{ post.id }}
+	</h1>
+	<h2>
+		{{ post.content }}
+	</h2>
+
+</div>

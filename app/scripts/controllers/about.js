@@ -15,7 +15,7 @@ angular.module('frontazApp')
       'Karma'
     ];
 
-    $scope.data = [
+    $scope.posts = [
     	{
     		id: 1,
     		title: 'post1title',
