@@ -12,6 +12,8 @@ module.exports = function (grunt) {
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
+  var modRewrite=require('connect-modrewrite');
+
   // Automatically load required Grunt tasks
   require('jit-grunt')(grunt, {
     useminPrepare: 'grunt-usemin',
@@ -24,6 +26,7 @@ module.exports = function (grunt) {
     app: require('./bower.json').appPath || 'app',
     dist: 'dist'
   };
+
 
   // Define the configuration for all the tasks
   grunt.initConfig({
@@ -78,19 +81,31 @@ module.exports = function (grunt) {
       livereload: {
         options: {
           open: true,
-          middleware: function (connect) {
-            return [
-              connect.static('.tmp'),
-              connect().use(
-                '/bower_components',
-                connect.static('./bower_components')
-              ),
-              connect().use(
-                '/app/styles',
-                connect.static('./app/styles')
-              ),
-              connect.static(appConfig.app)
-            ];
+          middleware: function (connect, options) {
+
+            var middlewares = [];
+            middlewares.push(modRewrite(['^[^\.]*$ /index.html [L]'])); //Matches everything that does not contain a '.' (period)
+            middlewares.push(connect.static('.tmp'));
+            middlewares.push(connect().use(  '/bower_components', connect.static('./bower_components')));
+            middlewares.push(connect().use( '/app/styles', connect.static('./app/styles')));
+            middlewares.push(connect.static(appConfig.app));
+            options.base.forEach(function(base) {
+              middlewares.push(connect.static(base));
+            });
+            return middlewares;
+
+            // return [
+            //   connect.static('.tmp'),
+            //   connect().use(
+            //     '/bower_components',
+            //     connect.static('./bower_components')
+            //   ),
+            //   connect().use(
+            //     '/app/styles',
+            //     connect.static('./app/styles')
+            //   ),
+            //   connect.static(appConfig.app)
+            // ];
           }
         }
       },

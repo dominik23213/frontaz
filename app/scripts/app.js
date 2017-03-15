@@ -44,5 +44,5 @@ angular
 		controllerAs: 'contact'
 	});
 
-	$urlRouterProvider.otherwise("/");
+	$urlRouterProvider.otherwise('/');
 });
